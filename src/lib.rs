@@ -20,8 +20,8 @@
 //!
 //! ## Deserializing a struct
 //!
-//! Usually, the format is untyped i.e. it deserialises to a map from [String] to [String]. This
-//! crate uses the default [std::str::FromStr] implementations for integers, floats and [bool] to
+//! Usually, the format is untyped i.e. it deserialises to a map from [`String`] to [`String`]. This
+//! crate uses the default [`std::str::FromStr`] implementations for integers, floats and [`bool`] to
 //! provide a typed interface on top of that. That way, simple structures or maps that implement
 //! [`serde::Deserialize`] can be loaded from properties files.
 //!
@@ -49,15 +49,15 @@
 //!
 //! ## Serializing a struct
 //!
-//! Serialization uses the default [std::fmt::Display] implementations for each primitive type.
+//! Serialization uses the default [`std::fmt::Display`] implementations for each primitive type.
 //!
-//! Supported in the top-level [Serializer]:
+//! Supported in the top-level [`Serializer`]:
 //! - Maps
 //! - Structs
 //! - Enums of struct variants
 //! - Options of all of these
 //!
-//! Supported in the field-level [Serializer]:
+//! Supported in the field-level Serializer:
 //! - Integers (`i8`, `i16`, `i32`, `i64`, `u8`, `u16`, `u32`, `u64`)
 //! - Floats (`f32`, `f64`)
 //! - Booleans (`true` or `false`)
