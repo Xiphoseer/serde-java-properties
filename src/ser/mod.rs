@@ -3,7 +3,7 @@
 use std::{error, fmt, io};
 
 use encoding::Encoding;
-use java_properties::{LineEnding, PropertiesError};
+use java_properties::PropertiesError;
 use serde::{
     ser::{self, Impossible},
     Serialize,
@@ -12,6 +12,8 @@ use serde::{
 use self::string::StringSerializer;
 
 mod string;
+
+pub use java_properties::LineEnding;
 
 /// Serialize a structure to a properties file
 pub struct Serializer<W: io::Write> {
@@ -29,7 +31,7 @@ impl<W: io::Write> Serializer<W> {
         Ok(())
     }
 
-    /// Set the line ending to `\n` or `\r\n`.
+    /// Set the line ending to `\n`, `\r` or `\r\n`.
     pub fn set_line_ending(&mut self, line_ending: LineEnding) {
         self.inner.set_line_ending(line_ending);
     }
