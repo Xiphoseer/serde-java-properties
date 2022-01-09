@@ -13,5 +13,5 @@ java-properties = "1.4"
 encoding = "0.2.33"
 
 [dev-dependencies.serde]
-version = "*"
+version = "1"
 features = ["derive"]
