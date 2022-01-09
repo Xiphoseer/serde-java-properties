@@ -36,14 +36,14 @@ impl<W: io::Write> Serializer<W> {
         self.inner.set_line_ending(line_ending);
     }
 
-    /// Create a serializer from a [io::Write] implementation
+    /// Create a serializer from a [`io::Write`] implementation
     pub fn from_writer(writer: W) -> Self {
         Self {
             inner: java_properties::PropertiesWriter::new(writer),
         }
     }
 
-    /// Create a serializer from a [io::Write] implementation with a specificed encoding
+    /// Create a serializer from a [`io::Write`] implementation with a specificed encoding
     pub fn from_writer_with_encoding(writer: W, encoding: &'static dyn Encoding) -> Self {
         Self {
             inner: java_properties::PropertiesWriter::new_with_encoding(writer, encoding),

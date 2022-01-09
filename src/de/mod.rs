@@ -6,7 +6,7 @@ use java_properties::PropertiesIter;
 use serde::de::{self, IntoDeserializer, MapAccess, Visitor};
 use serde::forward_to_deserialize_any;
 use std::fmt;
-use std::io::{Cursor, Read};
+use std::io;
 use std::num::{ParseFloatError, ParseIntError};
 use std::str::ParseBoolError;
 
@@ -19,12 +19,12 @@ mod field;
 /// This is a [serde](https://serde.rs) [`Deserializer`] implementation that
 /// transforms a Java Properties file into a datastructure using
 /// the [`java-properties` crate](https://crates.io/crates/java-properties).
-pub struct Deserializer<R: Read> {
+pub struct Deserializer<R: io::Read> {
     inner: PropertiesIter<R>,
 }
 
-impl<R: Read> Deserializer<R> {
-    /// Create a deserializer from a [`Read`] implementation
+impl<R: io::Read> Deserializer<R> {
+    /// Create a deserializer from a [`io::Read`] implementation
     ///
     /// **Important**: Do not use this with a [`std::io::Cursor<&str>`]. The reader
     /// expects *ISO-8859-1* by default. Use [`Deserializer::from_str`] instead, which
@@ -35,7 +35,7 @@ impl<R: Read> Deserializer<R> {
         }
     }
 
-    /// Create a deserializer from a [`Read`] implementation and the specified encoding
+    /// Create a deserializer from a [`io::Read`] implementation and the specified encoding
     pub fn from_reader_with_encoding(reader: R, encoding: &'static dyn Encoding) -> Self {
         Self {
             inner: PropertiesIter::new_with_encoding(reader, encoding),
@@ -43,27 +43,27 @@ impl<R: Read> Deserializer<R> {
     }
 }
 
-impl<'a> Deserializer<Cursor<&'a str>> {
+impl<'a> Deserializer<io::Cursor<&'a str>> {
     /// Create a deserializer from a [`str`] slice
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &'a str) -> Self {
-        Self::from_reader_with_encoding(Cursor::new(s), UTF8_ENCODING)
+        Self::from_reader_with_encoding(io::Cursor::new(s), UTF8_ENCODING)
     }
 }
 
-impl<'a> Deserializer<Cursor<&'a [u8]>> {
+impl<'a> Deserializer<io::Cursor<&'a [u8]>> {
     /// Create a deserializer from a byte slice
     ///
     /// **Important**: Do not pass a [`str::as_bytes`] to this function. The reader
     /// expects *ISO-8859-1* by default. Use [`Deserializer::from_str`] instead, which
     /// sets the correct encoding.
     pub fn from_slice(s: &'a [u8]) -> Self {
-        Self::from_reader(Cursor::new(s))
+        Self::from_reader(io::Cursor::new(s))
     }
 
     /// Create a deserializer from a byte slice with the specified encoding
     pub fn from_slice_with_encoding(s: &'a [u8], encoding: &'static dyn Encoding) -> Self {
-        Self::from_reader_with_encoding(Cursor::new(s), encoding)
+        Self::from_reader_with_encoding(io::Cursor::new(s), encoding)
     }
 }
 
@@ -138,7 +138,7 @@ impl serde::de::Error for Error {
     }
 }
 
-impl<'de, I: Read> de::Deserializer<'de> for Deserializer<I> {
+impl<'de, I: io::Read> de::Deserializer<'de> for Deserializer<I> {
     type Error = Error;
 
     fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error>
@@ -158,12 +158,12 @@ impl<'de, I: Read> de::Deserializer<'de> for Deserializer<I> {
     }
 }
 
-struct PropertiesMapAccess<I: Read> {
+struct PropertiesMapAccess<I: io::Read> {
     de: Deserializer<I>,
     line_value: Option<String>,
 }
 
-impl<'de, I: Read> MapAccess<'de> for PropertiesMapAccess<I> {
+impl<'de, I: io::Read> MapAccess<'de> for PropertiesMapAccess<I> {
     type Error = Error;
 
     fn next_key_seed<K>(&mut self, seed: K) -> Result<Option<K::Value>, Self::Error>
