@@ -1,5 +1,6 @@
 //! Deserialization
 
+use encoding::Encoding;
 use java_properties::LineContent::{Comment, KVPair};
 use java_properties::PropertiesIter;
 use serde::de::{self, IntoDeserializer, MapAccess, Visitor};
@@ -8,6 +9,8 @@ use std::fmt;
 use std::io::{Cursor, Read};
 use std::num::{ParseFloatError, ParseIntError};
 use std::str::ParseBoolError;
+
+use crate::UTF8_ENCODING;
 
 mod field;
 
@@ -22,9 +25,20 @@ pub struct Deserializer<R: Read> {
 
 impl<R: Read> Deserializer<R> {
     /// Create a deserializer from a [Read] implementation
+    ///
+    /// **Important**: Do not use this with a `std::io::Cursor<&str>`. The reader
+    /// expects *ISO-8859-1* by default. Use [`Self::from_str`] instead, which
+    /// sets the correct encoding.
     pub fn from_reader(reader: R) -> Self {
         Self {
             inner: PropertiesIter::new(reader),
+        }
+    }
+
+    /// Create a deserializer from a [Read] implementation and the specified encoding
+    pub fn from_reader_with_encoding(reader: R, encoding: &'static dyn Encoding) -> Self {
+        Self {
+            inner: PropertiesIter::new_with_encoding(reader, encoding),
         }
     }
 }
@@ -33,14 +47,23 @@ impl<'a> Deserializer<Cursor<&'a str>> {
     /// Create a deserializer from a [str] slice
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &'a str) -> Self {
-        Self::from_reader(Cursor::new(s))
+        Self::from_reader_with_encoding(Cursor::new(s), UTF8_ENCODING)
     }
 }
 
 impl<'a> Deserializer<Cursor<&'a [u8]>> {
     /// Create a deserializer from a byte slice
+    ///
+    /// **Important**: Do not pass a `String::as_bytes` to this function. The reader
+    /// expects *ISO-8859-1* by default. Use [`Self::from_str`] instead, which
+    /// sets the correct encoding.
     pub fn from_slice(s: &'a [u8]) -> Self {
         Self::from_reader(Cursor::new(s))
+    }
+
+    /// Create a deserializer from a byte slice with the specified encoding
+    pub fn from_slice_with_encoding(s: &'a [u8], encoding: &'static dyn Encoding) -> Self {
+        Self::from_reader_with_encoding(Cursor::new(s), encoding)
     }
 }
 
