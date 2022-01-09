@@ -200,7 +200,9 @@ pub fn from_reader_with_encoding<T: DeserializeOwned, R: Read>(
     ))
 }
 
-const UTF8_ENCODING: &'static dyn Encoding = &encoding::codec::utf_8::UTF8Encoding;
+/// UTF-8 Encoding from the [`encoding`](https://crates.io/crates/encoding) crate for use with
+/// the `*_with_encoding` functions.
+pub const UTF8_ENCODING: &'static dyn Encoding = &encoding::codec::utf_8::UTF8Encoding;
 
 /// Write a properties file to a string
 ///
