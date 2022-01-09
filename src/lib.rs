@@ -59,7 +59,8 @@
 //!
 //! Supported in the field-level [Serializer]:
 //! - Integers (`i8`, `i16`, `i32`, `i64`, `u8`, `u16`, `u32`, `u64`)
-//! - Floats (`f32, `f64`)
+//! - Floats (`f32`, `f64`)
+//! - Booleans (`true` or `false`)
 //! - Strings
 //! - Enums of unit variants
 //! - Options of all of these
@@ -82,6 +83,13 @@
 //!
 //! ## Tagged Enums
 //!
+//! Internally tagged enums are generally supported.
+//!
+//! Because of a limitation in serde, type hints are not available in this case, which
+//! means that the [`serde::Deserializer::deserialize_any`] method on the `FieldDeserializer`
+//! is called which only implements a limited heuristic as to which [`serde::de::Visitor`]
+//! method to call.
+//!
 //! ```
 //! use serde::{Deserialize, Serialize};
 //!
@@ -103,6 +111,27 @@
 //!
 //! let re1: Test = serde_java_properties::from_str(&text1).unwrap();
 //! let re2: Test = serde_java_properties::from_str(&text2).unwrap();
+//! ```
+//!
+//! ## Unit Struct Variants
+//!
+//! For simple enums, the name of the variant is used as the value
+//!
+//! ```
+//! # use serde::{Serialize, Deserialize};
+//! #
+//! #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+//! enum Switch { On, Off }
+//! #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+//! struct House { light: Switch, }
+//!
+//! let text = "light: On";
+//! let data: House = serde_java_properties::from_str(&text).unwrap();
+//!
+//! assert_eq!(data.light, Switch::On);
+//! let out = serde_java_properties::to_string(&data).unwrap();
+//!
+//! assert_eq!(out, "light=On\n");
 //! ```
 //!
 //! ## Alternatives

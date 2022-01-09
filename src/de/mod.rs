@@ -164,7 +164,7 @@ impl<'de, I: Read> MapAccess<'de> for PropertiesMapAccess<I> {
         V: serde::de::DeserializeSeed<'de>,
     {
         let value = self.line_value.take().unwrap();
-        seed.deserialize(field::PropFieldDeserializer(value))
+        seed.deserialize(field::FieldDeserializer(value))
     }
 }
 

@@ -4,7 +4,7 @@ use serde::{
     forward_to_deserialize_any,
 };
 
-pub(crate) struct PropFieldDeserializer(pub String);
+pub(crate) struct FieldDeserializer(pub String);
 
 macro_rules! make_fn {
     ($deserialize_fn:ident, $visit_fn:ident) => {
@@ -52,7 +52,7 @@ impl<'de> de::VariantAccess<'de> for UnitDeserializer {
     }
 }
 
-impl<'de> de::EnumAccess<'de> for PropFieldDeserializer {
+impl<'de> de::EnumAccess<'de> for FieldDeserializer {
     type Error = Error;
 
     type Variant = UnitDeserializer;
@@ -66,7 +66,7 @@ impl<'de> de::EnumAccess<'de> for PropFieldDeserializer {
     }
 }
 
-impl<'de> de::Deserializer<'de> for PropFieldDeserializer {
+impl<'de> de::Deserializer<'de> for FieldDeserializer {
     type Error = Error;
 
     fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error>
@@ -173,7 +173,7 @@ impl<'de> de::Deserializer<'de> for PropFieldDeserializer {
 mod tests {
     use serde::Deserializer;
 
-    use super::PropFieldDeserializer;
+    use super::FieldDeserializer;
 
     struct Visitor;
 
@@ -225,10 +225,7 @@ mod tests {
     }
 
     fn check(ty: Type, v: String) {
-        assert_eq!(
-            ty,
-            PropFieldDeserializer(v).deserialize_any(Visitor).unwrap()
-        );
+        assert_eq!(ty, FieldDeserializer(v).deserialize_any(Visitor).unwrap());
     }
 
     #[test]
