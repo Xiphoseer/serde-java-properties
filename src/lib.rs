@@ -138,10 +138,10 @@
 //!
 //! Similar to the [`java-properties` crate](https://crates.io/crates/java-properties) itself,
 //! this crate is supposed to be an exact match to the format
-//! [as specified in Java](https://docs.oracle.com/javase/10/docs/api/java/util/Properties.html#load(java.io.Reader))
+//! [as specified in Java](https://docs.oracle.com/javase/10/docs/api/java/util/Properties.html#load(java.io.Reader)).
 //!
 //! If you need a more powerful configuration syntax, that supports nested structs, you
-//! should probably use [HOCON](https://crates.io/crates/hocon)
+//! should probably use [HOCON](https://crates.io/crates/hocon).
 
 pub mod de;
 pub mod ser;
