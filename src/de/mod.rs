@@ -24,10 +24,10 @@ pub struct Deserializer<R: Read> {
 }
 
 impl<R: Read> Deserializer<R> {
-    /// Create a deserializer from a [Read] implementation
+    /// Create a deserializer from a [`Read`] implementation
     ///
-    /// **Important**: Do not use this with a `std::io::Cursor<&str>`. The reader
-    /// expects *ISO-8859-1* by default. Use [`Self::from_str`] instead, which
+    /// **Important**: Do not use this with a [`std::io::Cursor<&str>`]. The reader
+    /// expects *ISO-8859-1* by default. Use [`Deserializer::from_str`] instead, which
     /// sets the correct encoding.
     pub fn from_reader(reader: R) -> Self {
         Self {
@@ -35,7 +35,7 @@ impl<R: Read> Deserializer<R> {
         }
     }
 
-    /// Create a deserializer from a [Read] implementation and the specified encoding
+    /// Create a deserializer from a [`Read`] implementation and the specified encoding
     pub fn from_reader_with_encoding(reader: R, encoding: &'static dyn Encoding) -> Self {
         Self {
             inner: PropertiesIter::new_with_encoding(reader, encoding),
@@ -44,7 +44,7 @@ impl<R: Read> Deserializer<R> {
 }
 
 impl<'a> Deserializer<Cursor<&'a str>> {
-    /// Create a deserializer from a [str] slice
+    /// Create a deserializer from a [`str`] slice
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &'a str) -> Self {
         Self::from_reader_with_encoding(Cursor::new(s), UTF8_ENCODING)
@@ -54,8 +54,8 @@ impl<'a> Deserializer<Cursor<&'a str>> {
 impl<'a> Deserializer<Cursor<&'a [u8]>> {
     /// Create a deserializer from a byte slice
     ///
-    /// **Important**: Do not pass a `String::as_bytes` to this function. The reader
-    /// expects *ISO-8859-1* by default. Use [`Self::from_str`] instead, which
+    /// **Important**: Do not pass a [`str::as_bytes`] to this function. The reader
+    /// expects *ISO-8859-1* by default. Use [`Deserializer::from_str`] instead, which
     /// sets the correct encoding.
     pub fn from_slice(s: &'a [u8]) -> Self {
         Self::from_reader(Cursor::new(s))

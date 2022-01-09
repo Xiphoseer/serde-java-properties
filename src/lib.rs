@@ -165,13 +165,39 @@ pub fn from_str<'a, T: Deserialize<'a>>(input: &'a str) -> Result<T, Error> {
 /// Turn a byte slice into a value of `T`
 ///
 /// This should technically be `T: DeserializeOwned`, but the implementation may change in the future
+///
+/// **Important**: Do not pass a [`str::as_bytes`] to this function. The reader
+/// expects *ISO-8859-1* by default. Use [`from_str`] instead, which sets the correct encoding.
 pub fn from_slice<'a, T: Deserialize<'a>>(input: &'a [u8]) -> Result<T, Error> {
     T::deserialize(de::Deserializer::from_slice(input))
 }
 
+/// Turn a byte slice into a value of `T` using the given encoding
+///
+/// This should technically be `T: DeserializeOwned`, but the implementation may change in the future
+pub fn from_slice_with_encoding<'a, T: Deserialize<'a>>(
+    input: &'a [u8],
+    encoding: &'static dyn Encoding,
+) -> Result<T, Error> {
+    T::deserialize(de::Deserializer::from_slice_with_encoding(input, encoding))
+}
+
 /// Turn a reader into a value of `T`
+///
+/// **Important**: Do not use this with a [`std::io::Cursor<&str>`]. The reader expects
+/// *ISO-8859-1* by default. Use [`from_str`] instead, which sets the correct encoding.
 pub fn from_reader<T: DeserializeOwned, R: Read>(reader: R) -> Result<T, Error> {
     T::deserialize(de::Deserializer::from_reader(reader))
+}
+
+/// Turn a reader into a value of `T` using the given encoding
+pub fn from_reader_with_encoding<T: DeserializeOwned, R: Read>(
+    reader: R,
+    encoding: &'static dyn Encoding,
+) -> Result<T, Error> {
+    T::deserialize(de::Deserializer::from_reader_with_encoding(
+        reader, encoding,
+    ))
 }
 
 const UTF8_ENCODING: &'static dyn Encoding = &encoding::codec::utf_8::UTF8Encoding;
