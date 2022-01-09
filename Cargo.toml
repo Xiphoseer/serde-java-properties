@@ -2,6 +2,7 @@
 name = "serde-java-properties"
 version = "0.1.0"
 edition = "2021"
+description = "Serde support for `java-properties`"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/Xiphoseer/serde-java-properties"
