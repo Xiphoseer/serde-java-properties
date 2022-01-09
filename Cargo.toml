@@ -8,6 +8,10 @@ readme = "README.md"
 repository = "https://github.com/Xiphoseer/serde-java-properties"
 
 [dependencies]
-serde = { version = "1", features = ["derive"] }
+serde = "1"
 java-properties = "1.4"
 encoding = "0.2.33"
+
+[dev-dependencies.serde]
+version = "*"
+features = ["derive"]
