@@ -1,5 +1,9 @@
 # Serde Java Properties
 
+[![Docs](https://img.shields.io/docsrs/serde-java-properties)](https://docs.rs/serde-java-properties)
+[![License](https://img.shields.io/crates/l/serde-java-properties)](https://github.com/Xiphoseer/serde-java-properties/tree/main/LICENSE)
+[![Version](https://img.shields.io/crates/v/serde-java-properties)](https://crates.io/crates/serde-java-properties)
+
 [Java Properties](https://en.wikipedia.org/wiki/.properties) is a simple, line-oriented
 format for specifying key-value resources used in Java programs. This crate offers
 basic (de-)serializers for use with [serde](https://serde.rs)-enabled datastructures.
