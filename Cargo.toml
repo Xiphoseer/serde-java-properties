@@ -1,0 +1,9 @@
+[package]
+name = "serde-java-properties"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+java-properties = "1.4"
+encoding = "0.2.33"
