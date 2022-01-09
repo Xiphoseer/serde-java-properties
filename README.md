@@ -27,7 +27,7 @@ crate uses the default [std::str::FromStr] implementations for integers, floats 
 provide a typed interface on top of that. That way, simple structures or maps that implement
 [`serde::Deserialize`] can be loaded from properties files.
 
-```
+```rs
 use serde::Deserialize;
 
 #[derive(Debug, PartialEq, Deserialize)]
@@ -67,7 +67,7 @@ Supported in the field-level [Serializer]:
 - Enums of unit variants
 - Options of all of these
 
-```
+```rs
 use serde::Serialize;
 
 #[derive(Debug, PartialEq, Serialize)]
