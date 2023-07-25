@@ -212,7 +212,12 @@ mod tests {
 
         requestdistribution: String,
 
-        quite: Option<String>,
+        optional_string: Option<String>,
+        optional_usize: Option<usize>,
+        optional_bool: Option<bool>,
+        optional_string_empty: Option<String>,
+        optional_usize_empty: Option<usize>,
+        optional_bool_empty: Option<bool>,
     }
 
     #[test]
@@ -231,7 +236,9 @@ insertproportion=0
 
 requestdistribution=zipfian
 
-quite=not
+optional_string=Hello, world!
+optional_usize=42
+optional_bool=true
 ";
         let deserializer = Deserializer::from_str(data);
         let workload_a = Workload::deserialize(deserializer).unwrap();
@@ -251,7 +258,12 @@ quite=not
 
                 requestdistribution: "zipfian".to_string(),
 
-                quite: Some("not".to_string())
+                optional_string: Some("Hello, world!".to_string()),
+                optional_usize: Some(42),
+                optional_bool: Some(true),
+                optional_string_empty: None,
+                optional_usize_empty: None,
+                optional_bool_empty: None
             }
         );
     }
