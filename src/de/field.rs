@@ -133,9 +133,9 @@ impl<'de> de::Deserializer<'de> for FieldDeserializer {
         V: de::Visitor<'de>,
     {
         if self.0.is_empty() {
-            visitor.visit_some(self)
-        } else {
             visitor.visit_none()
+        } else {
+            visitor.visit_some(self)
         }
     }
 
