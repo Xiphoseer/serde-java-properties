@@ -211,6 +211,8 @@ mod tests {
         insertproportion: f32,
 
         requestdistribution: String,
+
+        quite: Option<String>,
     }
 
     #[test]
@@ -228,6 +230,8 @@ scanproportion=0
 insertproportion=0
 
 requestdistribution=zipfian
+
+quite=not
 ";
         let deserializer = Deserializer::from_str(data);
         let workload_a = Workload::deserialize(deserializer).unwrap();
@@ -246,6 +250,8 @@ requestdistribution=zipfian
                 insertproportion: 0.0,
 
                 requestdistribution: "zipfian".to_string(),
+
+                quite: Some("not".to_string())
             }
         );
     }
