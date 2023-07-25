@@ -213,11 +213,12 @@ mod tests {
         requestdistribution: String,
 
         optional_string: Option<String>,
+        optional_string_empty: Option<String>,
         optional_usize: Option<usize>,
         optional_bool: Option<bool>,
-        optional_string_empty: Option<String>,
-        optional_usize_empty: Option<usize>,
-        optional_bool_empty: Option<bool>,
+        optional_string_not_set: Option<String>,
+        optional_usize_not_set: Option<usize>,
+        optional_bool_not_set: Option<bool>,
     }
 
     #[test]
@@ -237,6 +238,7 @@ insertproportion=0
 requestdistribution=zipfian
 
 optional_string=Hello, world!
+optional_string_empty=
 optional_usize=42
 optional_bool=true
 ";
@@ -259,11 +261,12 @@ optional_bool=true
                 requestdistribution: "zipfian".to_string(),
 
                 optional_string: Some("Hello, world!".to_string()),
+                optional_string_empty: None,
                 optional_usize: Some(42),
                 optional_bool: Some(true),
-                optional_string_empty: None,
-                optional_usize_empty: None,
-                optional_bool_empty: None
+                optional_string_not_set: None,
+                optional_usize_not_set: None,
+                optional_bool_not_set: None
             }
         );
     }
