@@ -1,6 +1,6 @@
 [package]
 name = "serde-java-properties"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 description = "Serde support for `java-properties`"
 license = "MIT"
@@ -9,8 +9,8 @@ repository = "https://github.com/Xiphoseer/serde-java-properties"
 
 [dependencies]
 serde = "1"
-java-properties = "1.4"
-encoding = "0.2.33"
+java-properties = "2.0.0"
+encoding_rs = "0.8.34"
 
 [dev-dependencies.serde]
 version = "1"

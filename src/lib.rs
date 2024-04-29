@@ -149,10 +149,11 @@ pub mod ser;
 use std::io::{self, Read};
 
 pub use de::Deserializer;
+use encoding_rs::UTF_8;
 pub use ser::Serializer;
 
 use de::Error;
-use encoding::Encoding;
+use encoding_rs::Encoding;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 /// Turn a string into a value of `T`
@@ -177,7 +178,7 @@ pub fn from_slice<'a, T: Deserialize<'a>>(input: &'a [u8]) -> Result<T, Error> {
 /// This should technically be `T: DeserializeOwned`, but the implementation may change in the future
 pub fn from_slice_with_encoding<'a, T: Deserialize<'a>>(
     input: &'a [u8],
-    encoding: &'static dyn Encoding,
+    encoding: &'static Encoding,
 ) -> Result<T, Error> {
     T::deserialize(de::Deserializer::from_slice_with_encoding(input, encoding))
 }
@@ -193,16 +194,12 @@ pub fn from_reader<T: DeserializeOwned, R: Read>(reader: R) -> Result<T, Error> 
 /// Turn a reader into a value of `T` using the given encoding
 pub fn from_reader_with_encoding<T: DeserializeOwned, R: Read>(
     reader: R,
-    encoding: &'static dyn Encoding,
+    encoding: &'static Encoding,
 ) -> Result<T, Error> {
     T::deserialize(de::Deserializer::from_reader_with_encoding(
         reader, encoding,
     ))
 }
-
-/// UTF-8 Encoding from the [`encoding`](https://crates.io/crates/encoding) crate for use with
-/// the `*_with_encoding` functions.
-pub const UTF8_ENCODING: &'static dyn Encoding = &encoding::codec::utf_8::UTF8Encoding;
 
 /// Write a properties file to a string
 ///
@@ -210,14 +207,14 @@ pub const UTF8_ENCODING: &'static dyn Encoding = &encoding::codec::utf_8::UTF8En
 pub fn to_string<T: Serialize>(value: &T) -> Result<String, ser::Error> {
     let mut buffer = String::new();
     let writer = unsafe { buffer.as_mut_vec() };
-    to_writer_with_encoding(value, writer, UTF8_ENCODING)?;
+    to_writer_with_encoding(value, writer, UTF_8)?;
     Ok(buffer)
 }
 
 /// Write a properties file to a byte buffer with the specified encoding
 pub fn to_vec_with_encoding<T: Serialize>(
     value: &T,
-    encoding: &'static dyn Encoding,
+    encoding: &'static Encoding,
 ) -> Result<Vec<u8>, ser::Error> {
     let mut buffer = Vec::new();
     to_writer_with_encoding(value, &mut buffer, encoding)?;
@@ -246,7 +243,7 @@ pub fn to_writer<T: Serialize, W: io::Write>(value: &T, writer: W) -> Result<(),
 pub fn to_writer_with_encoding<T: Serialize, W: io::Write>(
     value: &T,
     writer: W,
-    encoding: &'static dyn Encoding,
+    encoding: &'static Encoding,
 ) -> Result<(), ser::Error> {
     let serializer = ser::Serializer::from_writer_with_encoding(writer, encoding);
     value.serialize(serializer)?;

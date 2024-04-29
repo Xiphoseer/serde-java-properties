@@ -1,6 +1,6 @@
 //! Deserialization
 
-use encoding::Encoding;
+use encoding_rs::{Encoding, UTF_8};
 use java_properties::LineContent::{Comment, KVPair};
 use java_properties::PropertiesIter;
 use serde::de::{self, IntoDeserializer, MapAccess, Visitor};
@@ -9,8 +9,6 @@ use std::fmt;
 use std::io;
 use std::num::{ParseFloatError, ParseIntError};
 use std::str::ParseBoolError;
-
-use crate::UTF8_ENCODING;
 
 mod field;
 
@@ -36,7 +34,7 @@ impl<R: io::Read> Deserializer<R> {
     }
 
     /// Create a deserializer from a [`io::Read`] implementation and the specified encoding
-    pub fn from_reader_with_encoding(reader: R, encoding: &'static dyn Encoding) -> Self {
+    pub fn from_reader_with_encoding(reader: R, encoding: &'static Encoding) -> Self {
         Self {
             inner: PropertiesIter::new_with_encoding(reader, encoding),
         }
@@ -47,7 +45,7 @@ impl<'a> Deserializer<io::Cursor<&'a str>> {
     /// Create a deserializer from a [`str`] slice
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &'a str) -> Self {
-        Self::from_reader_with_encoding(io::Cursor::new(s), UTF8_ENCODING)
+        Self::from_reader_with_encoding(io::Cursor::new(s), UTF_8)
     }
 }
 
@@ -62,7 +60,7 @@ impl<'a> Deserializer<io::Cursor<&'a [u8]>> {
     }
 
     /// Create a deserializer from a byte slice with the specified encoding
-    pub fn from_slice_with_encoding(s: &'a [u8], encoding: &'static dyn Encoding) -> Self {
+    pub fn from_slice_with_encoding(s: &'a [u8], encoding: &'static Encoding) -> Self {
         Self::from_reader_with_encoding(io::Cursor::new(s), encoding)
     }
 }

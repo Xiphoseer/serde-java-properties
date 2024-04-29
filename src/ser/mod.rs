@@ -2,7 +2,7 @@
 
 use std::{error, fmt, io};
 
-use encoding::Encoding;
+use encoding_rs::Encoding;
 use java_properties::PropertiesError;
 use serde::{
     ser::{self, Impossible},
@@ -44,7 +44,7 @@ impl<W: io::Write> Serializer<W> {
     }
 
     /// Create a serializer from a [`io::Write`] implementation with a specificed encoding
-    pub fn from_writer_with_encoding(writer: W, encoding: &'static dyn Encoding) -> Self {
+    pub fn from_writer_with_encoding(writer: W, encoding: &'static Encoding) -> Self {
         Self {
             inner: java_properties::PropertiesWriter::new_with_encoding(writer, encoding),
         }
